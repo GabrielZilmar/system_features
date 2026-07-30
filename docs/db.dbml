@@ -1,0 +1,59 @@
+Table users {
+  id integer [pk]
+  Note: 'Create relations simulating real db'
+}
+
+Table system_features {
+  id integer [pk]
+  key varchar(100) [unique, not null]
+  display_name varchar(255)
+  description text
+  is_enabled boolean [default: true]
+
+  Note: 'Features are created via migrations. Admins may globally enable or disable them.'
+}
+
+Table system_feature_groups {
+  id integer [pk]
+  name varchar(255) unique
+
+  Note: 'A group may have static members, dynamic rules, or both. It will depends about the relations'
+}
+
+// old access_control
+Table system_feature_group_permissions {
+  group_id integer pk [ref: > system_feature_groups.id]
+  feature_id integer pk [ref: > system_features.id]
+  is_allowed boolean [default: false]
+
+  Note: 'Determines whether this group grants or denies access to a feature.'
+}
+
+Table system_feature_group_members {
+  group_id integerc pk [ref: > system_feature_groups.id]
+  user_id integer pk [ref: > users.id]
+}
+
+Table system_feature_group_rule_sets {
+  id integer [pk]
+  group_id integer [not null, ref: > system_feature_groups.id]
+  name varchar(255)
+}
+
+Table system_feature_group_rules {
+  id integer [pk]
+  rule_set_id integer [not null, ref: > system_feature_group_rule_sets.id]
+  field varchar(255) // Enum. Indicates the table and the column. Ex: users.taxResidence
+  operator system_features_access_dynamic_group_rules_operator_enum
+  comparison_values varchar[]
+}
+
+enum system_features_access_group_type_enum {
+  STATIC
+  DYNAMIC
+}
+
+enum system_features_access_dynamic_group_rules_operator_enum {
+  IN
+  NOT_IN
+}

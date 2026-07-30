@@ -1,0 +1,26 @@
+flowchart TD
+
+    A[User requests feature] --> B{Feature enabled?}
+
+    B -->|No| End404[Return 404]
+    B -->|Yes| LoadPerms[Load feature permissions]
+
+    LoadPerms --> DenyGroups[Evaluate DENY groups]
+
+    DenyGroups --> DenyMatch{User belongs to any DENY group?}
+
+    DenyMatch -->|Yes| End403[Return 403]
+    DenyMatch -->|No| AllowGroups[Evaluate ALLOW groups]
+
+    AllowGroups --> StaticMember{User is a static group member?}
+
+    StaticMember -->|Yes| Success[Allow access]
+
+    StaticMember -->|No| HasDynamicRules{Group has dynamic rules?}
+
+    HasDynamicRules -->|No| End403
+
+    HasDynamicRules -->|Yes| ValidateRules{User satisfies dynamic rules?}
+
+    ValidateRules -->|Yes| Success
+    ValidateRules -->|No| End403
