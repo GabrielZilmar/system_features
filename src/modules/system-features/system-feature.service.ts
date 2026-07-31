@@ -61,12 +61,16 @@ export class SystemFeatureService {
       throw new NotFoundException(`System feature ${id} was not found`);
     }
 
-    const duplicatedSystemFeature =
-      await this.systemFeatureRepository.findByKey(updateSystemFeatureDto.key);
-    if (duplicatedSystemFeature && duplicatedSystemFeature.id != id) {
-      throw new ConflictException(
-        `System feature with key: ${updateSystemFeatureDto.key} already exists`,
-      );
+    if (updateSystemFeatureDto.key) {
+      const duplicatedSystemFeature =
+        await this.systemFeatureRepository.findByKey(
+          updateSystemFeatureDto.key,
+        );
+      if (duplicatedSystemFeature && duplicatedSystemFeature.id != id) {
+        throw new ConflictException(
+          `System feature with key: ${updateSystemFeatureDto.key} already exists`,
+        );
+      }
     }
 
     SystemFeatureMapper.toEntity(updateSystemFeatureDto, systemFeature);

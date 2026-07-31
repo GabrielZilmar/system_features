@@ -6,8 +6,8 @@ export class SystemFeatureGroup {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 255, unique: true })
-  key: string;
+  @Column({ name: 'key', length: 255, unique: true })
+  name: string;
 
   @OneToMany(
     () => SystemFeatureGroupPermission,

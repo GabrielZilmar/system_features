@@ -1,20 +1,20 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Setup1785449275543 implements MigrationInterface {
-  name = 'Setup1785449275543';
+export class Inital1785523084233 implements MigrationInterface {
+  name = 'Inital1785523084233';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `CREATE TABLE "users" ("id" SERIAL NOT NULL, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "system_features" ("id" SERIAL NOT NULL, "key" character varying(100) NOT NULL, "display_name" character varying(255), "description" character varying, "is_enabled" boolean NOT NULL DEFAULT true, CONSTRAINT "UQ_3927db26bc678c49b9a2b47c28c" UNIQUE ("key"), CONSTRAINT "PK_0c1d7826eeafb79aca18282059b" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "system_feature_groups" ("id" SERIAL NOT NULL, "key" character varying(255) NOT NULL, CONSTRAINT "UQ_b0765adc49ccdf8116908ca366f" UNIQUE ("key"), CONSTRAINT "PK_5fe53045d96a136b72ee147324c" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "system_feature_group_permissions" ("group_id" integer NOT NULL, "feature_id" integer NOT NULL, "is_allowed" boolean NOT NULL DEFAULT true, CONSTRAINT "PK_e92b8f8d1e8509a940c2b8e941d" PRIMARY KEY ("group_id", "feature_id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "system_feature_groups" ("id" SERIAL NOT NULL, "key" character varying(255) NOT NULL, CONSTRAINT "UQ_b0765adc49ccdf8116908ca366f" UNIQUE ("key"), CONSTRAINT "PK_5fe53045d96a136b72ee147324c" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "system_features" ("id" SERIAL NOT NULL, "key" character varying(100) NOT NULL, "display_name" character varying(255), "description" character varying, "is_enabled" boolean NOT NULL DEFAULT true, CONSTRAINT "UQ_3927db26bc678c49b9a2b47c28c" UNIQUE ("key"), CONSTRAINT "PK_0c1d7826eeafb79aca18282059b" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "system_feature_group_rule_sets" ("id" SERIAL NOT NULL, "group_id" integer NOT NULL, "name" character varying(255) NOT NULL, CONSTRAINT "UQ_d7230ff037134617be5ea4bf0fd" UNIQUE ("group_id", "name"), CONSTRAINT "PK_3db720b086c4240bcf42f63fb41" PRIMARY KEY ("id"))`,
@@ -73,9 +73,9 @@ export class Setup1785449275543 implements MigrationInterface {
       `DROP TYPE "public"."system_feature_group_rules_operator_enum"`,
     );
     await queryRunner.query(`DROP TABLE "system_feature_group_rule_sets"`);
-    await queryRunner.query(`DROP TABLE "system_feature_groups"`);
-    await queryRunner.query(`DROP TABLE "system_feature_group_permissions"`);
     await queryRunner.query(`DROP TABLE "system_features"`);
+    await queryRunner.query(`DROP TABLE "system_feature_group_permissions"`);
+    await queryRunner.query(`DROP TABLE "system_feature_groups"`);
     await queryRunner.query(`DROP TABLE "users"`);
   }
 }

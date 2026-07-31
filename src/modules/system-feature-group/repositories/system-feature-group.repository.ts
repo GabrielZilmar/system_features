@@ -1,12 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
-import { SystemFeature } from '~/modules/system-features/entities/system-features.entity';
+import { SystemFeatureGroup } from '~/modules/system-feature-group/entities/system-feature-group.entity';
 import { BaseRepository } from '~/shared/repositories/base/base-repository';
 
 @Injectable()
-export class SystemFeatureRepository extends BaseRepository<SystemFeature> {
+export class SystemFeatureGroupRepository extends BaseRepository<SystemFeatureGroup> {
   constructor(entityManager?: EntityManager) {
-    super(SystemFeature, entityManager);
+    super(SystemFeatureGroup, entityManager);
   }
 
   async findById(id: number) {
@@ -19,13 +19,13 @@ export class SystemFeatureRepository extends BaseRepository<SystemFeature> {
     });
   }
 
-  async findByKey(key: string) {
-    if (!key) {
-      throw new InternalServerErrorException('Missing params: key.');
+  async findByName(name: string) {
+    if (!name) {
+      throw new InternalServerErrorException('Missing params: name.');
     }
 
     return this.repo.findOne({
-      where: { key },
+      where: { name },
     });
   }
 }
