@@ -4,6 +4,7 @@ import { TerminusModule } from '@nestjs/terminus';
 import { DatabaseModule } from '~/modules/database/database.module';
 import { SystemFeatureGroupModule } from '~/modules/system-feature-group/system-feature-group.module';
 import { SystemFeatureModule } from '~/modules/system-features/system-feature.module';
+import { UserModule } from '~/modules/users/users.module';
 import repositoriesProviders from '~/shared/repositories/provider';
 
 @Global()
@@ -13,6 +14,7 @@ import repositoriesProviders from '~/shared/repositories/provider';
     DatabaseModule,
     SystemFeatureModule,
     SystemFeatureGroupModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [...repositoriesProviders],
