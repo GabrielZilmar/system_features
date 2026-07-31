@@ -1,5 +1,5 @@
 import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { SystemFeatureGroup } from '~/modules/system-features/entities/system-feature-groups.entity';
+import { SystemFeatureGroup } from '~/modules/system-feature-group/entities/system-feature-group.entity';
 import { User } from '~/modules/users/entities/user.entity';
 
 @Entity('system_feature_group_members')

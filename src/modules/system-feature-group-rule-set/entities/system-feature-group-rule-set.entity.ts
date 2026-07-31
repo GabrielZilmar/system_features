@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { SystemFeatureGroup } from '~/modules/system-features/entities/system-feature-groups.entity';
+import { SystemFeatureGroup } from '~/modules/system-feature-group/entities/system-feature-group.entity';
 
 @Entity('system_feature_group_rule_sets')
 @Unique(['groupId', 'name'])
