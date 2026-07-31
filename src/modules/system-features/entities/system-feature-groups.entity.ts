@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { SystemFeatureGroupPermission } from '~/modules/system-features/entities/system_feature_group_permissions.entity';
+import { SystemFeatureGroupPermission } from '~/modules/system-features/entities/system-feature-group-permissions.entity';
 
 @Entity('system_feature_groups')
 export class SystemFeatureGroup {

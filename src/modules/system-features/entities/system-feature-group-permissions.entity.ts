@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { SystemFeature } from '~/modules/system-features/entities/system-features.entity';
-import { SystemFeatureGroup } from '~/modules/system-features/entities/system_feature_groups.entity';
+import { SystemFeatureGroup } from '~/modules/system-features/entities/system-feature-groups.entity';
 
 @Entity('system_feature_group_permissions')
 export class SystemFeatureGroupPermission {

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { SystemFeatureGroupRuleSet } from '~/modules/system-features/entities/system_feature_group_rule_sets.entity';
+import { SystemFeatureGroupRuleSet } from '~/modules/system-features/entities/system-feature-group-rule-sets.entity';
 
 export enum SystemFeaturesAccessDynamicGroupRulesOperatorEnum {
   IN,
