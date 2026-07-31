@@ -1,12 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
-import { User } from '~/modules/users/entities/user.entity';
+import { Address } from '~/modules/addresses/entities/address.entity';
 import { BaseRepository } from '~/shared/repositories/base/base-repository';
 
 @Injectable()
-export class UserRepository extends BaseRepository<User> {
+export class AddressRepository extends BaseRepository<Address> {
   constructor(entityManager?: EntityManager) {
-    super(User, entityManager);
+    super(Address, entityManager);
   }
 
   async findById(id: number) {
@@ -19,13 +19,7 @@ export class UserRepository extends BaseRepository<User> {
     });
   }
 
-  async findByName(name: string) {
-    if (!name) {
-      throw new InternalServerErrorException('Missing params: name.');
-    }
-
-    return this.repo.findOne({
-      where: { name },
-    });
+  async create(data: Partial<Address>) {
+    return this.repo.create(data);
   }
 }

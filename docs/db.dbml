@@ -3,6 +3,12 @@ Table users {
   Note: 'Create relations simulating real db'
 }
 
+Table addresses {
+  id integer [pk]
+  name varchar(255) [not null]
+  user_id integer [unique, not null, ref: > users.id]
+}
+
 Table system_features {
   id integer [pk]
   key varchar(100) [unique, not null]

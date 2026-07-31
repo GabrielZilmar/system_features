@@ -29,7 +29,9 @@ export class SystemFeatureGroupPermissionService {
     ]);
 
     if (!group) {
-      throw new NotFoundException(`System feature group ${groupId} was not found`);
+      throw new NotFoundException(
+        `System feature group ${groupId} was not found`,
+      );
     }
 
     if (!feature) {

@@ -5,6 +5,7 @@ import { SystemFeatureGroupPermissionRepository } from '~/modules/system-feature
 import { SystemFeatureGroupRuleSetRepository } from '~/modules/system-feature-group-rule-set/repositories/system-feature-group-rule-set.repository';
 import { SystemFeatureGroupRepository } from '~/modules/system-feature-group/repositories/system-feature-group.repository';
 import { SystemFeatureRepository } from '~/modules/system-features/repositories/system-feature.repository';
+import { AddressRepository } from '~/modules/addresses/repositories/address.repository';
 import { UserRepository } from '~/modules/users/repositories/user.repository';
 
 const repositoriesProviders: Provider[] = [
@@ -14,6 +15,7 @@ const repositoriesProviders: Provider[] = [
   SystemFeatureGroupPermissionRepository,
   SystemFeatureGroupMemberRepository,
   SystemFeatureGroupRuleSetRepository,
+  AddressRepository,
   UserRepository,
 ];
 

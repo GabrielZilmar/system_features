@@ -4,7 +4,9 @@ import { UpdateSystemFeatureGroupRuleSetDto } from '~/modules/system-feature-gro
 import { SystemFeatureGroupRuleSet } from '~/modules/system-feature-group-rule-set/entities/system-feature-group-rule-set.entity';
 
 export class SystemFeatureGroupRuleSetMapper {
-  static toDto(ruleSet: SystemFeatureGroupRuleSet): SystemFeatureGroupRuleSetDto {
+  static toDto(
+    ruleSet: SystemFeatureGroupRuleSet,
+  ): SystemFeatureGroupRuleSetDto {
     return new SystemFeatureGroupRuleSetDto({
       id: ruleSet.id,
       groupId: ruleSet.groupId,
@@ -14,8 +16,7 @@ export class SystemFeatureGroupRuleSetMapper {
 
   static toEntity(
     ruleSetDto:
-      | CreateSystemFeatureGroupRuleSetDto
-      | UpdateSystemFeatureGroupRuleSetDto,
+      CreateSystemFeatureGroupRuleSetDto | UpdateSystemFeatureGroupRuleSetDto,
     ruleSet = new SystemFeatureGroupRuleSet(),
   ): SystemFeatureGroupRuleSet {
     if ('groupId' in ruleSetDto && ruleSetDto.groupId !== undefined) {

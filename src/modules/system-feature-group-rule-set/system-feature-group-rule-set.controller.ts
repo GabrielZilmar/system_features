@@ -33,7 +33,8 @@ export class SystemFeatureGroupRuleSetController {
 
   @Post()
   async create(
-    @Body() createSystemFeatureGroupRuleSetDto: CreateSystemFeatureGroupRuleSetDto,
+    @Body()
+    createSystemFeatureGroupRuleSetDto: CreateSystemFeatureGroupRuleSetDto,
   ): Promise<SystemFeatureGroupRuleSetDto> {
     return this.systemFeatureGroupRuleSetService.create(
       createSystemFeatureGroupRuleSetDto,
@@ -43,7 +44,8 @@ export class SystemFeatureGroupRuleSetController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateSystemFeatureGroupRuleSetDto: UpdateSystemFeatureGroupRuleSetDto,
+    @Body()
+    updateSystemFeatureGroupRuleSetDto: UpdateSystemFeatureGroupRuleSetDto,
   ): Promise<SystemFeatureGroupRuleSetDto> {
     return this.systemFeatureGroupRuleSetService.update(
       id,

@@ -1,11 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Inital1785523084233 implements MigrationInterface {
-  name = 'Inital1785523084233';
+export class Inital1785535929389 implements MigrationInterface {
+  name = 'Inital1785535929389';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "users" ("id" SERIAL NOT NULL, CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "addresses" ("id" SERIAL NOT NULL, "name" character varying(255) NOT NULL, "user_id" integer, CONSTRAINT "REL_16aac8a9f6f9c1dd6bcb75ec02" UNIQUE ("user_id"), CONSTRAINT "PK_745d8f43d3af10ab8247465e450" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "users" ("id" SERIAL NOT NULL, "name" character varying(255) NOT NULL, CONSTRAINT "UQ_51b8b26ac168fbe7d6f5653e6cf" UNIQUE ("name"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "system_feature_groups" ("id" SERIAL NOT NULL, "key" character varying(255) NOT NULL, CONSTRAINT "UQ_b0765adc49ccdf8116908ca366f" UNIQUE ("key"), CONSTRAINT "PK_5fe53045d96a136b72ee147324c" PRIMARY KEY ("id"))`,
@@ -27,6 +30,9 @@ export class Inital1785523084233 implements MigrationInterface {
     );
     await queryRunner.query(
       `CREATE TABLE "system_feature_group_members" ("group_id" integer NOT NULL, "user_id" integer NOT NULL, CONSTRAINT "PK_1fc09c7840cca782c269c39ca0e" PRIMARY KEY ("group_id", "user_id"))`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "addresses" ADD CONSTRAINT "FK_16aac8a9f6f9c1dd6bcb75ec023" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "system_feature_group_permissions" ADD CONSTRAINT "FK_999c029061b6e7961cc772b5f70" FOREIGN KEY ("group_id") REFERENCES "system_feature_groups"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
@@ -67,6 +73,9 @@ export class Inital1785523084233 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "system_feature_group_permissions" DROP CONSTRAINT "FK_999c029061b6e7961cc772b5f70"`,
     );
+    await queryRunner.query(
+      `ALTER TABLE "addresses" DROP CONSTRAINT "FK_16aac8a9f6f9c1dd6bcb75ec023"`,
+    );
     await queryRunner.query(`DROP TABLE "system_feature_group_members"`);
     await queryRunner.query(`DROP TABLE "system_feature_group_rules"`);
     await queryRunner.query(
@@ -77,5 +86,6 @@ export class Inital1785523084233 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "system_feature_group_permissions"`);
     await queryRunner.query(`DROP TABLE "system_feature_groups"`);
     await queryRunner.query(`DROP TABLE "users"`);
+    await queryRunner.query(`DROP TABLE "addresses"`);
   }
 }
