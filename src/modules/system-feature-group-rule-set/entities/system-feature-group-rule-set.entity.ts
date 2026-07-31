@@ -14,8 +14,8 @@ export class SystemFeatureGroupRuleSet {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
-  groupId: string;
+  @Column({ name: 'group_id', nullable: false })
+  groupId: number;
 
   @ManyToOne(() => SystemFeatureGroup)
   @JoinColumn({ name: 'group_id' })
