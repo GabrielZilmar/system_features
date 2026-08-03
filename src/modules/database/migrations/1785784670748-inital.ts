@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Inital1785535929389 implements MigrationInterface {
-  name = 'Inital1785535929389';
+export class Inital1785784670748 implements MigrationInterface {
+  name = 'Inital1785784670748';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -23,7 +23,7 @@ export class Inital1785535929389 implements MigrationInterface {
       `CREATE TABLE "system_feature_group_rule_sets" ("id" SERIAL NOT NULL, "group_id" integer NOT NULL, "name" character varying(255) NOT NULL, CONSTRAINT "UQ_d7230ff037134617be5ea4bf0fd" UNIQUE ("group_id", "name"), CONSTRAINT "PK_3db720b086c4240bcf42f63fb41" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TYPE "public"."system_feature_group_rules_operator_enum" AS ENUM('0', '1')`,
+      `CREATE TYPE "public"."system_feature_group_rules_operator_enum" AS ENUM('IN', 'NOT_IN')`,
     );
     await queryRunner.query(
       `CREATE TABLE "system_feature_group_rules" ("id" SERIAL NOT NULL, "rule_set_id" integer NOT NULL, "field" character varying(255) NOT NULL, "comparison_values" text NOT NULL, "operator" "public"."system_feature_group_rules_operator_enum" NOT NULL, CONSTRAINT "PK_72165a51e767bb4ebfcdf89868b" PRIMARY KEY ("id"))`,

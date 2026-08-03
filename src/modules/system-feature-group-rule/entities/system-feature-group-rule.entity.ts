@@ -6,10 +6,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SystemFeatureGroupRuleSet } from '~/modules/system-feature-group-rule-set/entities/system-feature-group-rule-set.entity';
+import { GroupRuleFields } from '~/modules/system-feature-group-rule/constants';
 
 export enum SystemFeaturesAccessDynamicGroupRulesOperatorEnum {
-  IN,
-  NOT_IN,
+  IN = 'IN',
+  NOT_IN = 'NOT_IN',
 }
 
 @Entity('system_feature_group_rules')
@@ -18,17 +19,17 @@ export class SystemFeatureGroupRule {
   id: number;
 
   @Column({ nullable: false })
-  ruleSetId: string;
+  ruleSetId: number;
 
   @ManyToOne(() => SystemFeatureGroupRuleSet)
   @JoinColumn({ name: 'rule_set_id' })
   ruleSet: SystemFeatureGroupRuleSet;
 
   @Column({ length: 255 })
-  field: string;
+  field: GroupRuleFields;
 
   @Column('simple-array')
-  comparison_values: string[];
+  comparisonValues: string[];
 
   @Column({
     type: 'enum',

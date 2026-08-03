@@ -40,7 +40,9 @@ export class UserService {
       const userRepository = new UserRepository(manager);
       const addressRepository = new AddressRepository(manager);
 
-      const duplicatedUser = await userRepository.findByName(createUserDto.name);
+      const duplicatedUser = await userRepository.findByName(
+        createUserDto.name,
+      );
       if (duplicatedUser) {
         throw new ConflictException(
           `User with name: ${createUserDto.name} already exists`,
