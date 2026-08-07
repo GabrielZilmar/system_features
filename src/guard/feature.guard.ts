@@ -15,10 +15,7 @@ import {
   SystemFeatureGroupRule,
   SystemFeaturesAccessDynamicGroupRulesOperatorEnum,
 } from '~/modules/system-feature-group-rule/entities/system-feature-group-rule.entity';
-import {
-  SYSTEM_FEATURE_KEYS,
-  SystemFeatureKeys,
-} from '~/modules/system-features/constants';
+import { SystemFeatureKeys } from '~/modules/system-features/constants';
 import { SystemFeature } from '~/modules/system-features/entities/system-features.entity';
 import { SystemFeatureRepository } from '~/modules/system-features/repositories/system-feature.repository';
 import { User } from '~/modules/users/entities/user.entity';
