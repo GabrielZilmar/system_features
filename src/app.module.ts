@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { TerminusModule } from '@nestjs/terminus';
 import { DatabaseModule } from '~/modules/database/database.module';
-import { SystemFeatureGroupPermissionModule } from '~/modules/system-feature-group-permission/system-feature-group-permission.module';
+import { SystemFeatureAccessControlModule } from '~/modules/system-feature-access-control/system-feature-access-control.module';
 import { SystemFeatureGroupMembersModule } from '~/modules/system-feature-group-members/system-feature-group-members.module';
 import { SystemFeatureGroupRuleModule } from '~/modules/system-feature-group-rule/system-feature-group-rule.module';
 import { SystemFeatureGroupRuleSetModule } from '~/modules/system-feature-group-rule-set/system-feature-group-rule-set.module';
@@ -18,7 +18,7 @@ import repositoriesProviders from '~/shared/repositories/provider';
     DatabaseModule,
     SystemFeatureModule,
     SystemFeatureGroupModule,
-    SystemFeatureGroupPermissionModule,
+    SystemFeatureAccessControlModule,
     SystemFeatureGroupMembersModule,
     SystemFeatureGroupRuleModule,
     SystemFeatureGroupRuleSetModule,

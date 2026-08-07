@@ -1,6 +1,6 @@
 import { IsBoolean, IsInt, IsOptional, Min } from 'class-validator';
 
-export class CreateSystemFeatureGroupPermissionDto {
+export class CreateSystemFeatureAccessControlDto {
   @IsInt()
   @Min(1)
   groupId: number;

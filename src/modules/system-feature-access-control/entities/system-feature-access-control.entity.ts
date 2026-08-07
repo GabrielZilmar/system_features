@@ -2,8 +2,8 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { SystemFeature } from '~/modules/system-features/entities/system-features.entity';
 import { SystemFeatureGroup } from '~/modules/system-feature-group/entities/system-feature-group.entity';
 
-@Entity('system_feature_group_permissions')
-export class SystemFeatureGroupPermission {
+@Entity('system_feature_access_control')
+export class SystemFeatureAccessControl {
   @PrimaryColumn({ name: 'group_id' })
   groupId: number;
 

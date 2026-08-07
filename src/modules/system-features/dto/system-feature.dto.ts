@@ -1,4 +1,4 @@
-import { SystemFeatureGroupPermissionDto } from '~/modules/system-feature-group-permission/dto/system-feature-group-permission.dto';
+import { SystemFeatureAccessControlDto } from '~/modules/system-feature-access-control/dto/system-feature-access-control.dto';
 
 export class SystemFeatureDto {
   id: number;
@@ -6,7 +6,7 @@ export class SystemFeatureDto {
   displayName: string | null = null;
   description: string | null = null;
   isEnabled: boolean;
-  groupPermissions?: SystemFeatureGroupPermissionDto[];
+  accessControls?: SystemFeatureAccessControlDto[];
 
   constructor(init: SystemFeatureDto) {
     Object.assign(this, init);

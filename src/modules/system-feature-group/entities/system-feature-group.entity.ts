@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { SystemFeatureGroupMembers } from '~/modules/system-feature-group-members/entities/system-feature-group-member.entity';
-import { SystemFeatureGroupPermission } from '~/modules/system-feature-group-permission/entities/system-feature-group-permission.entity';
+import { SystemFeatureAccessControl } from '~/modules/system-feature-access-control/entities/system-feature-access-control.entity';
 import { SystemFeatureGroupRuleSet } from '~/modules/system-feature-group-rule-set/entities/system-feature-group-rule-set.entity';
 
 @Entity('system_feature_groups')
@@ -12,10 +12,10 @@ export class SystemFeatureGroup {
   name: string;
 
   @OneToMany(
-    () => SystemFeatureGroupPermission,
-    (permission) => permission.group,
+    () => SystemFeatureAccessControl,
+    (accessControl) => accessControl.group,
   )
-  permissions: SystemFeatureGroupPermission[];
+  accessControls: SystemFeatureAccessControl[];
 
   @OneToMany(() => SystemFeatureGroupMembers, (member) => member.group)
   members: SystemFeatureGroupMembers[];

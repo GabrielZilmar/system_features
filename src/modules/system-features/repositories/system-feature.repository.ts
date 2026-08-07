@@ -38,7 +38,7 @@ export class SystemFeatureRepository extends BaseRepository<SystemFeature> {
     return this.repo.findOne({
       where: { id },
       relations: {
-        groupPermissions: {
+        accessControls: {
           group: { members: { user: true }, sets: { rules: true } },
         },
       },

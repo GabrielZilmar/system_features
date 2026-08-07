@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { SystemFeatureGroupPermission } from '~/modules/system-feature-group-permission/entities/system-feature-group-permission.entity';
+import { SystemFeatureAccessControl } from '~/modules/system-feature-access-control/entities/system-feature-access-control.entity';
 import { SystemFeatureKeys } from '~/modules/system-features/constants';
 
 @Entity('system_features')
@@ -20,8 +20,8 @@ export class SystemFeature {
   isEnabled: boolean;
 
   @OneToMany(
-    () => SystemFeatureGroupPermission,
+    () => SystemFeatureAccessControl,
     (permission) => permission.feature,
   )
-  groupPermissions: SystemFeatureGroupPermission[];
+  accessControls: SystemFeatureAccessControl[];
 }

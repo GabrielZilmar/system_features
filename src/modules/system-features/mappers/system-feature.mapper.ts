@@ -2,7 +2,7 @@ import { SystemFeature } from '~/modules/system-features/entities/system-feature
 import { CreateSystemFeatureDto } from '~/modules/system-features/dto/create-system-feature.dto';
 import { SystemFeatureDto } from '~/modules/system-features/dto/system-feature.dto';
 import { UpdateSystemFeatureDto } from '~/modules/system-features/dto/update-system-feature.dto';
-import { SystemFeatureGroupPermissionMapper } from '~/modules/system-feature-group-permission/mappers/system-feature-group-permission.mapper';
+import { SystemFeatureAccessControlMapper } from '~/modules/system-feature-access-control/mappers/system-feature-access-control.mapper';
 
 export class SystemFeatureMapper {
   static toDto(systemFeature: SystemFeature): SystemFeatureDto {
@@ -14,9 +14,9 @@ export class SystemFeatureMapper {
       isEnabled: systemFeature.isEnabled,
     });
 
-    if (systemFeature.groupPermissions) {
-      dto.groupPermissions = systemFeature.groupPermissions.map(
-        SystemFeatureGroupPermissionMapper.toDto,
+    if (systemFeature.accessControls) {
+      dto.accessControls = systemFeature.accessControls.map(
+        SystemFeatureAccessControlMapper.toDto,
       );
     }
 

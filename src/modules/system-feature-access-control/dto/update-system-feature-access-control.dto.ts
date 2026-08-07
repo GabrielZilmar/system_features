@@ -1,6 +1,6 @@
 import { IsBoolean, IsOptional } from 'class-validator';
 
-export class UpdateSystemFeatureGroupPermissionDto {
+export class UpdateSystemFeatureAccessControlDto {
   @IsOptional()
   @IsBoolean()
   isAllowed?: boolean;

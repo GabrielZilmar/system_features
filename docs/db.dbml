@@ -27,7 +27,7 @@ Table system_feature_groups {
 }
 
 // old access_control
-Table system_feature_group_permissions {
+Table system_feature_access_control {
   group_id integer pk [ref: > system_feature_groups.id]
   feature_id integer pk [ref: > system_features.id]
   is_allowed boolean [default: false]

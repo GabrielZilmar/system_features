@@ -1,12 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
-import { SystemFeatureGroupPermission } from '~/modules/system-feature-group-permission/entities/system-feature-group-permission.entity';
+import { SystemFeatureAccessControl } from '~/modules/system-feature-access-control/entities/system-feature-access-control.entity';
 import { BaseRepository } from '~/shared/repositories/base/base-repository';
 
 @Injectable()
-export class SystemFeatureGroupPermissionRepository extends BaseRepository<SystemFeatureGroupPermission> {
+export class SystemFeatureAccessControlRepository extends BaseRepository<SystemFeatureAccessControl> {
   constructor(entityManager?: EntityManager) {
-    super(SystemFeatureGroupPermission, entityManager);
+    super(SystemFeatureAccessControl, entityManager);
   }
 
   async findByGroupIdAndFeatureId(groupId: number, featureId: number) {

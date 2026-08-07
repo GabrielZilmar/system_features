@@ -7,10 +7,9 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { permission } from 'process';
 import { Feature } from '~/decorators/feature.decorator';
-import { SystemFeatureGroupPermission } from '~/modules/system-feature-group-permission/entities/system-feature-group-permission.entity';
-import { SystemFeatureGroupPermissionRepository } from '~/modules/system-feature-group-permission/repositories/system-feature-group-permission.repository';
+import { SystemFeatureAccessControl } from '~/modules/system-feature-access-control/entities/system-feature-access-control.entity';
+import { SystemFeatureAccessControlRepository } from '~/modules/system-feature-access-control/repositories/system-feature-access-control.repository';
 import { GROUP_RULE_FIELDS } from '~/modules/system-feature-group-rule/constants';
 import {
   SystemFeatureGroupRule,
@@ -31,7 +30,7 @@ export class FeatureGuard {
     private readonly reflector: Reflector,
     private readonly userRepository: UserRepository,
     private readonly systemFeatureRepository: SystemFeatureRepository,
-    private readonly systemFeatureGroupPermissionRepository: SystemFeatureGroupPermissionRepository,
+    private readonly systemFeatureAccessControlRepository: SystemFeatureAccessControlRepository,
   ) {}
 
   private async resolveUserFromRequest(request: Request) {
@@ -58,15 +57,15 @@ export class FeatureGuard {
   }
 
   private userIsAllowedAsGroupMember(
-    groupPermissions: SystemFeatureGroupPermission[],
+    accessControls: SystemFeatureAccessControl[],
     userId: number,
   ) {
-    return groupPermissions.some((permission) => {
-      const hasMember = permission.group.members.some(
+    return accessControls.some((accessControl) => {
+      const hasMember = accessControl.group.members.some(
         (member) => member.userId === userId,
       );
 
-      if (hasMember && !permission.isAllowed) {
+      if (hasMember && !accessControl.isAllowed) {
         throw new ForbiddenException(
           'The user cannot access this feature because they belong to a group that is denied access.',
         );
@@ -101,18 +100,18 @@ export class FeatureGuard {
   }
 
   private userIsAllowedByRules(
-    groupPermissions: SystemFeatureGroupPermission[],
+    accessControls: SystemFeatureAccessControl[],
     user: User,
   ) {
-    return groupPermissions.some((permission) => {
-      const matchRule = permission.group.sets.some((set) => {
+    return accessControls.some((accessControl) => {
+      const matchRule = accessControl.group.sets.some((set) => {
         if (!set.rules.length) {
           return false;
         }
 
         return set.rules.every((rule) => this.useHasRuleAccess(rule, user));
       });
-      if (!permission.isAllowed && matchRule) {
+      if (!accessControl.isAllowed && matchRule) {
         throw new ForbiddenException(
           'The user cannot access this feature because they belong to a group that has a rule with a denied access.',
         );
@@ -123,16 +122,16 @@ export class FeatureGuard {
   }
 
   private async validateFeaturePermissions(feature: SystemFeature, user: User) {
-    const groupPermissions =
-      await this.systemFeatureGroupPermissionRepository.findByFeatureIdWithGroupRelations(
+    const accessControls =
+      await this.systemFeatureAccessControlRepository.findByFeatureIdWithGroupRelations(
         feature.id,
       );
-    if (!groupPermissions.length) {
+    if (!accessControls.length) {
       return;
     }
 
     const isAllowedAsGroupMember = this.userIsAllowedAsGroupMember(
-      groupPermissions,
+      accessControls,
       user.id,
     );
     if (isAllowedAsGroupMember) {
@@ -140,7 +139,7 @@ export class FeatureGuard {
       return;
     }
 
-    const isAllowedByRules = this.userIsAllowedByRules(groupPermissions, user);
+    const isAllowedByRules = this.userIsAllowedByRules(accessControls, user);
     if (!isAllowedByRules) {
       throw new ForbiddenException(
         'The user cannot access this feature because they does not match to any rule.',
