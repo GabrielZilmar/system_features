@@ -3,9 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { SystemFeatureGroupRule } from '~/modules/system-feature-group-rule/entities/system-feature-group-rule.entity';
 import { SystemFeatureGroup } from '~/modules/system-feature-group/entities/system-feature-group.entity';
 
 @Entity('system_feature_group_rule_sets')
@@ -23,4 +25,7 @@ export class SystemFeatureGroupRuleSet {
 
   @Column({ length: 255 })
   name: string;
+
+  @OneToMany(() => SystemFeatureGroupRule, (rule) => rule.ruleSet)
+  rules: SystemFeatureGroupRule[];
 }

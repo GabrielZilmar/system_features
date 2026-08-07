@@ -39,8 +39,14 @@ export class SystemFeatureGroupMembersService {
   }
 
   async findAll(): Promise<SystemFeatureGroupMemberDto[]> {
-    const members = await this.systemFeatureGroupMemberRepository.findAll({
-      order: { groupId: 'ASC', userId: 'ASC' },
+    const members =
+      await this.systemFeatureGroupMemberRepository.findAllWithUserRelations();
+    members.sort((left, right) => {
+      if (left.groupId !== right.groupId) {
+        return left.groupId - right.groupId;
+      }
+
+      return left.userId - right.userId;
     });
     return members.map(SystemFeatureGroupMemberMapper.toDto);
   }

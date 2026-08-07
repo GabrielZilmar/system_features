@@ -34,4 +34,15 @@ export class SystemFeatureGroupPermissionRepository extends BaseRepository<Syste
 
     return this.repo.delete({ groupId, featureId });
   }
+
+  async findByFeatureIdWithGroupRelations(featureId: number) {
+    if (!featureId) {
+      throw new InternalServerErrorException('Missing params: featureId.');
+    }
+
+    return this.repo.find({
+      where: { featureId },
+      relations: { group: { members: true, sets: { rules: true } } },
+    });
+  }
 }

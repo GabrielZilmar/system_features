@@ -1,13 +1,20 @@
 import { CreateSystemFeatureGroupMemberDto } from '~/modules/system-feature-group-members/dto/create-system-feature-group-member.dto';
 import { SystemFeatureGroupMemberDto } from '~/modules/system-feature-group-members/dto/system-feature-group-member.dto';
 import { SystemFeatureGroupMembers } from '~/modules/system-feature-group-members/entities/system-feature-group-member.entity';
+import { UserMapper } from '~/modules/users/mappers/user.mapper';
 
 export class SystemFeatureGroupMemberMapper {
   static toDto(member: SystemFeatureGroupMembers): SystemFeatureGroupMemberDto {
-    return new SystemFeatureGroupMemberDto({
+    const dto = new SystemFeatureGroupMemberDto({
       groupId: member.groupId,
       userId: member.userId,
     });
+
+    if (member.user) {
+      dto.user = UserMapper.toDto(member.user);
+    }
+
+    return dto;
   }
 
   static toEntity(

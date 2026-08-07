@@ -20,6 +20,13 @@ export class SystemFeatureGroupMemberRepository extends BaseRepository<SystemFea
 
     return this.repo.findOne({
       where: { groupId, userId },
+      relations: { user: true },
+    });
+  }
+
+  async findAllWithUserRelations(): Promise<SystemFeatureGroupMembers[]> {
+    return this.repo.find({
+      relations: { user: true },
     });
   }
 

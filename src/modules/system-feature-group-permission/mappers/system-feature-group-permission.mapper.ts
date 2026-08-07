@@ -2,16 +2,23 @@ import { CreateSystemFeatureGroupPermissionDto } from '~/modules/system-feature-
 import { SystemFeatureGroupPermissionDto } from '~/modules/system-feature-group-permission/dto/system-feature-group-permission.dto';
 import { UpdateSystemFeatureGroupPermissionDto } from '~/modules/system-feature-group-permission/dto/update-system-feature-group-permission.dto';
 import { SystemFeatureGroupPermission } from '~/modules/system-feature-group-permission/entities/system-feature-group-permission.entity';
+import { SystemFeatureGroupMapper } from '~/modules/system-feature-group/mappers/system-feature-group.mapper';
 
 export class SystemFeatureGroupPermissionMapper {
   static toDto(
     permission: SystemFeatureGroupPermission,
   ): SystemFeatureGroupPermissionDto {
-    return new SystemFeatureGroupPermissionDto({
+    const dto = new SystemFeatureGroupPermissionDto({
       groupId: permission.groupId,
       featureId: permission.featureId,
       isAllowed: permission.isAllowed,
     });
+
+    if (permission.group) {
+      dto.group = SystemFeatureGroupMapper.toDto(permission.group);
+    }
+
+    return dto;
   }
 
   static toEntity(

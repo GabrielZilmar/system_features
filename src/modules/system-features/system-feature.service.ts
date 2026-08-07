@@ -23,7 +23,8 @@ export class SystemFeatureService {
   }
 
   async findOne(id: number): Promise<SystemFeatureDto> {
-    const systemFeature = await this.systemFeatureRepository.findById(id);
+    const systemFeature =
+      await this.systemFeatureRepository.findDetailsById(id);
 
     if (!systemFeature) {
       throw new NotFoundException(`System feature ${id} was not found`);

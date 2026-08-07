@@ -2,16 +2,23 @@ import { CreateSystemFeatureGroupRuleSetDto } from '~/modules/system-feature-gro
 import { SystemFeatureGroupRuleSetDto } from '~/modules/system-feature-group-rule-set/dto/system-feature-group-rule-set.dto';
 import { UpdateSystemFeatureGroupRuleSetDto } from '~/modules/system-feature-group-rule-set/dto/update-system-feature-group-rule-set.dto';
 import { SystemFeatureGroupRuleSet } from '~/modules/system-feature-group-rule-set/entities/system-feature-group-rule-set.entity';
+import { SystemFeatureGroupRuleMapper } from '~/modules/system-feature-group-rule/mappers/system-feature-group-rule.mapper';
 
 export class SystemFeatureGroupRuleSetMapper {
   static toDto(
     ruleSet: SystemFeatureGroupRuleSet,
   ): SystemFeatureGroupRuleSetDto {
-    return new SystemFeatureGroupRuleSetDto({
+    const dto = new SystemFeatureGroupRuleSetDto({
       id: ruleSet.id,
       groupId: ruleSet.groupId,
       name: ruleSet.name,
     });
+
+    if (ruleSet.rules) {
+      dto.rules = ruleSet.rules.map(SystemFeatureGroupRuleMapper.toDto);
+    }
+
+    return dto;
   }
 
   static toEntity(

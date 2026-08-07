@@ -1,10 +1,22 @@
-import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import {
+  SYSTEM_FEATURE_KEYS,
+  SystemFeatureKeys,
+} from '~/modules/system-features/constants';
 
 export class UpdateSystemFeatureDto {
   @IsOptional()
   @IsString()
+  @IsIn(Object.values(SYSTEM_FEATURE_KEYS))
   @MaxLength(100)
-  key?: string;
+  key?: SystemFeatureKeys;
 
   @IsOptional()
   @IsString()

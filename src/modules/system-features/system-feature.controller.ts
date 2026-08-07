@@ -11,7 +11,6 @@ import { ParseIntPipe } from '@nestjs/common/pipes';
 import { CreateSystemFeatureDto } from '~/modules/system-features/dto/create-system-feature.dto';
 import { SystemFeatureDto } from '~/modules/system-features/dto/system-feature.dto';
 import { UpdateSystemFeatureDto } from '~/modules/system-features/dto/update-system-feature.dto';
-import { SystemFeatureMapper } from '~/modules/system-features/mappers/system-feature.mapper';
 import { SystemFeatureService } from '~/modules/system-features/system-feature.service';
 
 @Controller('system-features')
