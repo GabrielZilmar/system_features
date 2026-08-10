@@ -31,12 +31,17 @@ export class FeatureGuard {
   ) {}
 
   private async resolveUserFromRequest(request: Request) {
-    const userId = request.headers['user-id'];
-    if (!userId || Array.isArray(userId)) {
+    const userIdHeader = request.headers['user-id'];
+    if (!userIdHeader || Array.isArray(userIdHeader)) {
       throw new UnauthorizedException("'user-id' header not provided");
     }
 
-    const user = await this.userRepository.findById(Number(userId));
+    const userId = Number(userIdHeader);
+    if (!Number.isInteger(userId) || userId <= 0) {
+      throw new UnauthorizedException("'user-id' header is invalid");
+    }
+
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -46,75 +51,70 @@ export class FeatureGuard {
 
   private async validateFeature(featureKey: SystemFeatureKeys) {
     const feature = await this.systemFeatureRepository.findByKey(featureKey);
-    if (!feature.isEnabled) {
+    if (!feature || !feature.isEnabled) {
       throw new NotFoundException();
     }
 
     return feature;
   }
 
-  private userIsAllowedAsGroupMember(
-    accessControls: SystemFeatureAccessControl[],
-    userId: number,
-  ) {
-    return accessControls.some((accessControl) => {
-      const hasMember = accessControl.group.members.some(
-        (member) => member.userId === userId,
-      );
-
-      if (hasMember && !accessControl.isAllowed) {
-        throw new ForbiddenException(
-          'The user cannot access this feature because they belong to a group that is denied access.',
-        );
-      }
-
-      return hasMember;
-    });
+  private normalizeComparisonValue(value?: string | null) {
+    return value?.trim().toLowerCase();
   }
 
-  private useHasRuleAccess(rule: SystemFeatureGroupRule, user: User) {
+  private userMatchesGroupRule(rule: SystemFeatureGroupRule, user: User) {
+    const normalizedUserName = this.normalizeComparisonValue(user.name);
+    const normalizedAddressName = this.normalizeComparisonValue(
+      user.address?.name,
+    );
+
     switch (rule.field) {
-      case GROUP_RULE_FIELDS.USER_NAME:
+      case GROUP_RULE_FIELDS.USER_NAME: {
         const hasName = rule.comparisonValues.some(
-          (value) => value.toLowerCase() === user.name.toLowerCase(),
+          (value) =>
+            this.normalizeComparisonValue(value) === normalizedUserName,
         );
 
         return rule.operator ===
           SystemFeaturesAccessDynamicGroupRulesOperatorEnum.IN
           ? hasName
           : !hasName;
+      }
 
-      case GROUP_RULE_FIELDS.ADDRESS_NAME:
+      case GROUP_RULE_FIELDS.ADDRESS_NAME: {
         const hasAddress = rule.comparisonValues.some(
-          (value) => value.toLowerCase() === user.address?.name.toLowerCase(),
+          (value) =>
+            this.normalizeComparisonValue(value) === normalizedAddressName,
         );
 
         return rule.operator ===
           SystemFeaturesAccessDynamicGroupRulesOperatorEnum.IN
           ? hasAddress
           : !hasAddress;
+      }
+
+      default:
+        return false;
     }
   }
 
-  private userIsAllowedByRules(
-    accessControls: SystemFeatureAccessControl[],
+  private userMatchesAccessControl(
+    accessControl: SystemFeatureAccessControl,
     user: User,
   ) {
-    return accessControls.some((accessControl) => {
-      const matchRule = accessControl.group.sets.some((set) => {
-        if (!set.rules.length) {
-          return false;
-        }
+    const memberMatch = accessControl.group.members.some(
+      (member) => member.userId === user.id,
+    );
+    if (memberMatch) {
+      return true;
+    }
 
-        return set.rules.every((rule) => this.useHasRuleAccess(rule, user));
-      });
-      if (!accessControl.isAllowed && matchRule) {
-        throw new ForbiddenException(
-          'The user cannot access this feature because they belong to a group that has a rule with a denied access.',
-        );
+    return accessControl.group.sets.some((set) => {
+      if (!set.rules.length) {
+        return false;
       }
 
-      return matchRule;
+      return set.rules.every((rule) => this.userMatchesGroupRule(rule, user));
     });
   }
 
@@ -127,21 +127,29 @@ export class FeatureGuard {
       return;
     }
 
-    const isAllowedAsGroupMember = this.userIsAllowedAsGroupMember(
-      accessControls,
-      user.id,
+    const deniedAccessControl = accessControls.find(
+      (accessControl) =>
+        !accessControl.isAllowed &&
+        this.userMatchesAccessControl(accessControl, user),
     );
-    if (isAllowedAsGroupMember) {
-      console.info('User is a member of a allowed group');
+    if (deniedAccessControl) {
+      throw new ForbiddenException(
+        'The user cannot access this feature because they match a denied access-control rule.',
+      );
+    }
+
+    const allowedAccessControl = accessControls.some(
+      (accessControl) =>
+        accessControl.isAllowed &&
+        this.userMatchesAccessControl(accessControl, user),
+    );
+    if (allowedAccessControl) {
       return;
     }
 
-    const isAllowedByRules = this.userIsAllowedByRules(accessControls, user);
-    if (!isAllowedByRules) {
-      throw new ForbiddenException(
-        'The user cannot access this feature because they does not match to any rule.',
-      );
-    }
+    throw new ForbiddenException(
+      'The user cannot access this feature because they do not match any allowed access-control rule.',
+    );
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
