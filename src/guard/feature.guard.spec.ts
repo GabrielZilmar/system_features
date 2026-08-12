@@ -6,8 +6,6 @@ import {
 import { Reflector } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';
 import { FeatureGuard } from './feature.guard';
-import { GROUP_RULE_FIELDS } from '~/modules/system-feature-group-rule/constants';
-import { SystemFeaturesAccessDynamicGroupRulesOperatorEnum } from '~/modules/system-feature-group-rule/entities/system-feature-group-rule.entity';
 import { SYSTEM_FEATURE_KEYS } from '~/modules/system-features/constants';
 
 const createContext = (userId?: string) =>
@@ -34,7 +32,7 @@ describe('FeatureGuard', () => {
   };
 
   const systemFeatureAccessControlRepository = {
-    findByFeatureIdWithGroupRelations: jest.fn(),
+    findMatchingByFeatureIdAndUserId: jest.fn(),
   };
 
   const guard = new FeatureGuard(
@@ -67,21 +65,10 @@ describe('FeatureGuard', () => {
       address: { name: 'Lisbon' },
     });
     (
-      systemFeatureAccessControlRepository.findByFeatureIdWithGroupRelations as jest.Mock
+      systemFeatureAccessControlRepository.findMatchingByFeatureIdAndUserId as jest.Mock
     ).mockResolvedValue([
       {
-        isAllowed: true,
-        group: {
-          members: [{ userId: 10 }],
-          sets: [],
-        },
-      },
-      {
         isAllowed: false,
-        group: {
-          members: [{ userId: 10 }],
-          sets: [],
-        },
       },
     ]);
 
@@ -97,27 +84,8 @@ describe('FeatureGuard', () => {
       address: { name: 'Lisbon' },
     });
     (
-      systemFeatureAccessControlRepository.findByFeatureIdWithGroupRelations as jest.Mock
-    ).mockResolvedValue([
-      {
-        isAllowed: true,
-        group: {
-          members: [],
-          sets: [
-            {
-              rules: [
-                {
-                  field: GROUP_RULE_FIELDS.USER_NAME,
-                  operator:
-                    SystemFeaturesAccessDynamicGroupRulesOperatorEnum.IN,
-                  comparisonValues: ['alice'],
-                },
-              ],
-            },
-          ],
-        },
-      },
-    ]);
+      systemFeatureAccessControlRepository.findMatchingByFeatureIdAndUserId as jest.Mock
+    ).mockResolvedValue([{ isAllowed: true }]);
 
     await expect(guard.canActivate(createContext('10'))).resolves.toBe(true);
   });
@@ -128,27 +96,8 @@ describe('FeatureGuard', () => {
       name: 'Alice',
     });
     (
-      systemFeatureAccessControlRepository.findByFeatureIdWithGroupRelations as jest.Mock
-    ).mockResolvedValue([
-      {
-        isAllowed: true,
-        group: {
-          members: [],
-          sets: [
-            {
-              rules: [
-                {
-                  field: GROUP_RULE_FIELDS.ADDRESS_NAME,
-                  operator:
-                    SystemFeaturesAccessDynamicGroupRulesOperatorEnum.NOT_IN,
-                  comparisonValues: ['porto'],
-                },
-              ],
-            },
-          ],
-        },
-      },
-    ]);
+      systemFeatureAccessControlRepository.findMatchingByFeatureIdAndUserId as jest.Mock
+    ).mockResolvedValue([{ isAllowed: true }]);
 
     await expect(guard.canActivate(createContext('10'))).resolves.toBe(true);
   });
@@ -160,16 +109,8 @@ describe('FeatureGuard', () => {
       address: { name: 'Lisbon' },
     });
     (
-      systemFeatureAccessControlRepository.findByFeatureIdWithGroupRelations as jest.Mock
-    ).mockResolvedValue([
-      {
-        isAllowed: true,
-        group: {
-          members: [],
-          sets: [],
-        },
-      },
-    ]);
+      systemFeatureAccessControlRepository.findMatchingByFeatureIdAndUserId as jest.Mock
+    ).mockResolvedValue([]);
 
     await expect(guard.canActivate(createContext('10'))).rejects.toBeInstanceOf(
       ForbiddenException,
